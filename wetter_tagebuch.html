@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wetter-Tagebuch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e3f2fd;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            font-size: 2rem;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 1rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Wetter-Tagebuch</h1>
+        <p>Notiere tägliche Wetterdaten und deine Stimmung.</p>
+    </header>
+    <div>
+        <div class="input-group">
+            <label for="date">Datum</label>
+            <input type="date" id="date">
+        </div>
+        <div class="input-group">
+            <label for="weather">Wetter</label>
+            <select id="weather">
+                <option value="Sonnig">Sonnig</option>
+                <option value="Bewölkt">Bewölkt</option>
+                <option value="Regnerisch">Regnerisch</option>
+                <option value="Schnee">Schnee</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="mood">Stimmung</label>
+            <input type="text" id="mood" placeholder="Wie fühlst du dich?">
+        </div>
+        <button id="add-entry">Eintrag hinzufügen</button>
+        <ul id="entry-list"></ul>
+    </div>
+    <script>
+        const entryList = document.getElementById('entry-list');
+        const entries = JSON.parse(localStorage.getItem('entries')) || [];
+
+        function renderEntries() {
+            entryList.innerHTML = '';
+            entries.forEach(entry => {
+                const li = document.createElement('li');
+                li.textContent = `${entry.date} - Wetter: ${entry.weather}, Stimmung: ${entry.mood}`;
+                entryList.appendChild(li);
+            });
+        }
+
+        document.getElementById('add-entry').addEventListener('click', () => {
+            const date = document.getElementById('date').value;
+            const weather = document.getElementById('weather').value;
+            const mood = document.getElementById('mood').value.trim();
+
+            if (!date || !mood) {
+                alert('Bitte Datum und Stimmung eingeben.');
+                return;
+            }
+
+            entries.push({ date, weather, mood });
+            localStorage.setItem('entries', JSON.stringify(entries));
+            renderEntries();
+
+            document.getElementById('date').value = '';
+            document.getElementById('mood').value = '';
+        });
+
+        renderEntries();
+    </script>
+</body>
+</html>
